@@ -15,21 +15,21 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name='StartPage' component={StartPage} />
-        <Stack.Screen name='HomePage' component={HomePage} />
-        <Stack.Screen name='SearchPage' component={SearchPage} />
-        <Stack.Screen name='SettingsPage' component={SettingsPage} />
-        <Stack.Screen name='CovidDataDisplay' component={CovidDataDisplay} />
+        <Stack.Screen name='Start Page' component={StartPage} />
+        <Stack.Screen name='Home Page' component={HomePage} />
+        <Stack.Screen name='Search Page' component={SearchPage} />
+        <Stack.Screen name='Settings Page' component={SettingsPage} />
+        <Stack.Screen name='Covid Data Display' component={CovidDataDisplay} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#fff',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+// });

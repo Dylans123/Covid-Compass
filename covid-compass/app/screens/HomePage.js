@@ -6,15 +6,15 @@ const HomePage = ({ navigation }) => {
     <View>
       <Button
         title='Covid Data'
-        onPress={() => navigation.navigate('CovidDataDisplay')}
+        onPress={() => navigation.navigate('Covid Data Display')}
       />
       <Button
         title='Search'
-        onPress={() => navigation.navigate('SearchPage')}
+        onPress={() => navigation.navigate('Search Page')}
       />
       <Button
         title='Settings'
-        onPress={() => navigation.navigate('SettingsPage')}
+        onPress={() => navigation.navigate('Settings Page')}
       />
     </View>
   );

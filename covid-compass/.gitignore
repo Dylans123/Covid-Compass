@@ -1,5 +1,10 @@
 node_modules/**/*
+<<<<<<< HEAD
+node_modules/**/*
+node_modules
+=======
 .env
+>>>>>>> eeeac03d665f65ed5a36c32a0b0c46f7ae1c5646
 .expo/*
 npm-debug.*
 *.jks
@@ -8,7 +13,10 @@ npm-debug.*
 *.key
 *.mobileprovision
 *.orig.*
+<<<<<<< HEAD
+=======
 .env
+>>>>>>> eeeac03d665f65ed5a36c32a0b0c46f7ae1c5646
 web-build/
 
 # macOS
