@@ -17,16 +17,12 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
-<<<<<<< HEAD
-    "react-native-svg": "^12.1.0",
-=======
     "react-native-gesture-handler": "~1.8.0",
     "react-native-iphone-x-helper": "^1.3.1",
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.9",
     "react-native-screens": "~2.15.2",
     "react-native-svg": "12.1.0",
->>>>>>> eeeac03d665f65ed5a36c32a0b0c46f7ae1c5646
     "react-native-svg-charts": "^5.4.0",
     "react-native-web": "~0.13.12",
     "expo-font": "~8.4.0"
