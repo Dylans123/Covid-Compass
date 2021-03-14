@@ -125,19 +125,7 @@ const HomePage = ({ navigation }) => {
       });
   }, [countyID]);
 
-  const mapit = (location, countyID, currentData, historicData) => {
-    const { county, liveData } =
-      currentData != null
-        ? currentData
-        : { county: 'Loading county...', liveData: 'Loading live data...' };
-    const { totalCases, newDeaths } =
-      historicData != null
-        ? historicData
-        : {
-            totalCases: 'Loading total cases...',
-            newDeaths: 'Loading new deaths...',
-          };
-
+  const mapit = (location, countyID, currentData, historicData, navigation) => {
     return (
       <View style={styles.container}>
         <MapView
@@ -154,45 +142,19 @@ const HomePage = ({ navigation }) => {
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
             }}
-            title={countyID != null ? countyID : 'test title'}
-            description={county}>
-            <View style={{ backgroundColor: '#CDCDCD', padding: '10%' }}>
-              <Text>Information for {county}</Text>
-              <Text>Live Data</Text>
-              <ScrollView>
-                {liveData != 'Loading live data...' && (
-                  <BarChart
-                    style={{ height: 200, width: 250 }}
-                    data={liveData}
-                    svg={{ fill: 'rgb(134, 65, 244)' }}
-                    contentInset={{ top: 30, bottom: 30 }}>
-                    <Grid />
-                  </BarChart>
-                )}
-
-                <Text>Total Cases</Text>
-                {totalCases != 'Loading total cases...' && (
-                  <LineChart
-                    style={{ height: 200, width: 250 }}
-                    data={totalCases}
-                    svg={{ stroke: 'rgb(134, 65, 244)' }}
-                    contentInset={{ top: 20, bottom: 20 }}>
-                    <Grid />
-                  </LineChart>
-                )}
-                <Text>New Deaths</Text>
-                {newDeaths != 'Loading new deaths...' && (
-                  <LineChart
-                    style={{ height: 200, width: 250 }}
-                    data={newDeaths}
-                    svg={{ stroke: 'rgb(134, 65, 244)' }}
-                    contentInset={{ top: 20, bottom: 20 }}>
-                    <Grid />
-                  </LineChart>
-                )}
-              </ScrollView>
-            </View>
-          </Marker>
+            title={'Click to See More'}
+            description={
+              currentData != null ? currentData.county : 'Loading county..'
+            }
+            onCalloutPress={() => {
+              //   console.log('pressed');
+              if (currentData != null && historicData != null) {
+                navigation.navigate('Covid Data Display', {
+                  currentData: currentData,
+                  historicData: historicData,
+                });
+              }
+            }}></Marker>
         </MapView>
       </View>
     );
@@ -203,7 +165,8 @@ const HomePage = ({ navigation }) => {
       {/* {console.log(location)}
       {console.log(countyID)}
       {console.log(currentData)} */}
-      {location != null && mapit(location, countyID, currentData, historicData)}
+      {location != null &&
+        mapit(location, countyID, currentData, historicData, navigation)}
     </View>
   );
 };
