@@ -6,6 +6,9 @@ import * as Location from 'expo-location';
 const HomePage = ({ navigation }) => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [countyID, setCountyID] = useState(null);
+  const [currentData, setCurrentData] = useState();
+  const [loadingCurrent, setLoadingCurrent] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -17,13 +20,57 @@ const HomePage = ({ navigation }) => {
 
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
+
+      lon = location.coords.longitude;
+      lat = location.coords.latitude;
+
+      fetch(
+        'https://geo.fcc.gov/api/census/area?lat=' +
+          lat +
+          '&lon=' +
+          lon +
+          '&format=json'
+      )
+        .then(async (res) => await res.json())
+        .then((res) => {
+          setCountyID(res.results[0].county_fips);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     })();
   }, []);
 
-  const mapit = (location) => {
-    console.log(location);
-    console.log(location.coords.latitude);
-    console.log(location.coords.longitude);
+  useEffect(() => {
+    fetch(
+      'https://api.covidactnow.org/v2/county/' +
+        countyID +
+        '.json?apiKey=81fd4c1a6dae45a5a3f3e07983754248'
+    )
+      .then(async (res) => await res.json())
+      .then((res) => {
+        // console.log('current');
+        console.log(res);
+        const {
+          cases,
+          deaths,
+          newCases,
+          newDeaths: curNewDeaths,
+        } = res.actuals;
+        const { county: curCounty } = res;
+        const current = {
+          liveData: [cases, deaths, newCases, curNewDeaths],
+          county: curCounty,
+        };
+        setCurrentData(current);
+        setLoadingCurrent(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [countyID]);
+
+  const mapit = (location, countyID, currentData) => {
     return (
       <View style={styles.container}>
         <MapView
@@ -40,9 +87,16 @@ const HomePage = ({ navigation }) => {
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
             }}
-            title={'test1'}
-            description={'test2'}
-          />
+            title={countyID != null ? countyID : 'test title'}
+            description={
+              currentData != null ? currentData.county : 'test description'
+            }>
+            <View style={{ backgroundColor: 'red', padding: 10 }}>
+              <Text>
+                {currentData != null ? currentData.liveData : 'test live data'}
+              </Text>
+            </View>
+          </Marker>
         </MapView>
       </View>
     );
@@ -50,19 +104,10 @@ const HomePage = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {location != null && mapit(location)}
-      {/* <Button
-        title='Covid Data'
-        onPress={() => navigation.navigate('Covid Data Display')}
-      />
-      <Button
-        title='Search'
-        onPress={() => navigation.navigate('Search Page')}
-      />
-      <Button
-        title='Settings'
-        onPress={() => navigation.navigate('Settings Page')}
-      /> */}
+      {console.log(location)}
+      {console.log(countyID)}
+      {console.log(currentData)}
+      {location != null && mapit(location, countyID, currentData)}
     </View>
   );
 };
