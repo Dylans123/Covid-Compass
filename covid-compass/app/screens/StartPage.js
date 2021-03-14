@@ -1,11 +1,19 @@
 import React from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import {
+  Button,
+  StyleSheet,
+  Text,
+  View,
+  StatusBar,
+  SafeAreaView,
+} from 'react-native';
 
 const StartPage = ({ navigation }) => {
   return (
-    <View>
+    <SafeAreaView>
+      <StatusBar backgroundColor='#000' barStyle='light-content' />
       <Button title='Start' onPress={() => navigation.navigate('Home Page')} />
-    </View>
+    </SafeAreaView>
   );
 };
 

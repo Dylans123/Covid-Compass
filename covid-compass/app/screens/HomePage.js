@@ -6,10 +6,16 @@ import {
   Text,
   View,
   Dimensions,
+  SafeAreaView,
+  StatusBar,
 } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { LineChart, BarChart, Grid } from 'react-native-svg-charts';
 import * as Location from 'expo-location';
+import { SearchBar } from 'react-native-elements';
+import Geocoder from 'react-native-geocoding';
+
+Geocoder.init('AIzaSyCDmfNfDBKbl1rn30FOoFezWq41slIbkOw');
 
 const HomePage = ({ navigation }) => {
   const [location, setLocation] = useState(null);
@@ -19,6 +25,7 @@ const HomePage = ({ navigation }) => {
   const [loadingCurrent, setLoadingCurrent] = useState(true);
   const [historicData, setHistoricData] = useState();
   const [loadingHistoric, setLoadingHistoric] = useState(true);
+  const [search, setSearch] = useState();
 
   useEffect(() => {
     (async () => {
@@ -29,16 +36,21 @@ const HomePage = ({ navigation }) => {
       }
 
       let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
 
       lon = location.coords.longitude;
       lat = location.coords.latitude;
 
+      setLocation({ latitude: lat, longitude: lon });
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
       fetch(
         'https://geo.fcc.gov/api/census/area?lat=' +
-          lat +
+          location.latitude +
           '&lon=' +
-          lon +
+          location.longitude +
           '&format=json',
         {
           headers: {
@@ -55,7 +67,7 @@ const HomePage = ({ navigation }) => {
           console.log(error);
         });
     })();
-  }, []);
+  }, [location]);
 
   useEffect(() => {
     fetch(
@@ -131,16 +143,16 @@ const HomePage = ({ navigation }) => {
         <MapView
           style={styles.map}
           region={{
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
+            latitude: location.latitude,
+            longitude: location.longitude,
             latitudeDelta: 0.01,
             longitudeDelta: 0.01,
           }}>
           <Marker
             key={'1'}
             coordinate={{
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
+              latitude: location.latitude,
+              longitude: location.longitude,
             }}
             title={'Click to See More'}
             description={
@@ -160,14 +172,36 @@ const HomePage = ({ navigation }) => {
     );
   };
 
+  function updateSearch(search) {
+    setSearch(search);
+    console.log('If init ' + Geocoder.isInit);
+    Geocoder.from(search)
+      .then((json) => {
+        var loc = json.results[0].geometry.location;
+        setLocation({ latitude: loc.lat, longitude: loc.lng });
+        console.log(loc);
+      })
+      .catch((error) => console.log(error));
+  }
+
   return (
-    <View style={styles.container}>
-      {/* {console.log(location)}
-      {console.log(countyID)}
-      {console.log(currentData)} */}
-      {location != null &&
-        mapit(location, countyID, currentData, historicData, navigation)}
-    </View>
+    <SafeAreaView style={styles.container}>
+      <StatusBar backgroundColor='#000000' barStyle='light-content' />
+      <View style={{ width: 350, marginTop: 50 }}>
+        <SearchBar
+          style={{ alignItems: 'center', justifyContent: 'center' }}
+          placeholder='Type Here...'
+          onChangeText={updateSearch}
+          lightTheme={true}
+          value={search}
+        />
+      </View>
+
+      <View>
+        {location != null &&
+          mapit(location, countyID, currentData, historicData, navigation)}
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -178,10 +212,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
   },
   map: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    width: 350,
+    height: 600,
   },
 });

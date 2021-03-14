@@ -15,11 +15,31 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name='Start Page' component={StartPage} />
-        <Stack.Screen name='Home Page' component={HomePage} />
-        <Stack.Screen name='Search Page' component={SearchPage} />
-        <Stack.Screen name='Settings Page' component={SettingsPage} />
-        <Stack.Screen name='Covid Data Display' component={CovidDataDisplay} />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name='Start Page'
+          component={StartPage}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name='Home Page'
+          component={HomePage}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name='Search Page'
+          component={SearchPage}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name='Settings Page'
+          component={SettingsPage}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name='Covid Data Display'
+          component={CovidDataDisplay}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
