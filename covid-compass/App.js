@@ -1,114 +1,28 @@
-// import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { LineChart, BarChart, Grid } from 'react-native-svg-charts';
-import { Container, Text, Spinner } from 'native-base';
-import * as Font from 'expo-font';
-import { Ionicons } from '@expo/vector-icons';
+import 'react-native-gesture-handler';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import StartPage from './app/screens/StartPage';
+import HomePage from './app/screens/HomePage';
+import SearchPage from './app/screens/SearchPage';
+import SettingsPage from './app/screens/SettingsPage';
+import CovidDataDisplay from './app/screens/CovidDataDisplay';
+
+const Stack = createStackNavigator();
 
 export default function App() {
-  const [currentData, setCurrentData] = useState()
-  const [historicData, setHistoricData] = useState()
-  const [loadingCurrent, setLoadingCurrent] = useState(true);
-  const [loadingHistoric, setLoadingHistoric] = useState(true);
-
-  useEffect(() => {
-    fetch('https://api.covidactnow.org/v2/county/12011.json?apiKey=81fd4c1a6dae45a5a3f3e07983754248')
-      .then(async (res) => await res.json())
-      .then(res => {
-        console.log('current')
-        console.log(res);
-        const { cases, deaths, newCases, newDeaths: curNewDeaths } = res.actuals;
-        const { county: curCounty } = res;
-        const current = {
-          liveData: [cases, deaths, newCases, curNewDeaths],
-          county: curCounty
-        }
-        setCurrentData(current);
-        setLoadingCurrent(false);
-      })
-      .catch(error => {
-        console.log(error);
-      })
-    
-    fetch('https://api.covidactnow.org/v2/county/12011.timeseries.json?apiKey=81fd4c1a6dae45a5a3f3e07983754248')
-      .then(async (res) => await res.json())
-      .then(res => {
-        console.log('historic')
-        // console.log(res);
-        const totalCases = res.actualsTimeseries.map((dataPoint) => {
-          if (dataPoint.cases) {
-            return dataPoint.cases;
-          }
-        })
-        const newDeaths = res.actualsTimeseries.map((dataPoint) => {
-          if (dataPoint.newDeaths) {
-            return dataPoint.newDeaths;
-          }
-        })
-        console.log('newDeaths')
-        console.log(newDeaths)
-        const historic = {
-          totalCases,
-          newDeaths
-        }
-        // console.log(historic)
-        setHistoricData(historic);
-        setLoadingHistoric(false);
-      })
-      .catch(error => {
-        console.log(error);
-      })
-  }, [])
-  // const data = [50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80]
-
-  if (loadingCurrent || loadingHistoric) {
-    console.log('loading')
-    return (
-      <Container style={{ padding: '10%', height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-        <Spinner />
-      </Container>
-    )
-  } else if (!currentData || !historicData) {
-    console.log('error')
-    return (
-      <Container style={{ padding: '10%' }}>
-        <Text>Error</Text>
-      </Container>
-    )
-  }
-  console.log('displaying')
-  const { county, liveData } = currentData;
-  console.log(liveData);
-  const { totalCases, newDeaths } = historicData;
   return (
-    // <View style={styles.container}>
-    <Container style={{ padding: '10%' }}>
-      <Text>Information for {county}</Text>
-      <Text>Live Data</Text>
-      <BarChart style={{ height: 200 }} data={liveData} svg={{ fill: 'rgb(134, 65, 244)' }} contentInset={{ top: 30, bottom: 30 }}>
-        <Grid />
-      </BarChart>
-      <Text>Total Cases</Text>
-      <LineChart
-          style={{ height: 200 }}
-          data={totalCases}
-          svg={{ stroke: 'rgb(134, 65, 244)' }}
-          contentInset={{ top: 20, bottom: 20 }}
-      >
-        <Grid />
-      </LineChart>
-      <Text>New Deaths</Text>
-      <LineChart
-          style={{ height: 200 }}
-          data={newDeaths}
-          svg={{ stroke: 'rgb(134, 65, 244)' }}
-          contentInset={{ top: 20, bottom: 20 }}
-      >
-        <Grid />
-      </LineChart>
-    </Container>
-  )
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name='StartPage' component={StartPage} />
+        <Stack.Screen name='HomePage' component={HomePage} />
+        <Stack.Screen name='SearchPage' component={SearchPage} />
+        <Stack.Screen name='SettingsPage' component={SettingsPage} />
+        <Stack.Screen name='CovidDataDisplay' component={CovidDataDisplay} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }
 
 // const styles = StyleSheet.create({
