@@ -91,9 +91,11 @@ const HomePage = ({ navigation }) => {
             description={
               currentData != null ? currentData.county : 'test description'
             }>
-            <View style={{ backgroundColor: 'red', padding: 10 }}>
+            <View style={{ backgroundColor: 'gray', padding: 10 }}>
               <Text>
-                {currentData != null ? currentData.liveData : 'test live data'}
+                {currentData != null
+                  ? JSON.stringify(currentData)
+                  : 'test live data'}
               </Text>
             </View>
           </Marker>
